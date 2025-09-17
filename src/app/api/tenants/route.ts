@@ -1,34 +1,35 @@
 import { NextResponse } from "next/server";
 
-// TEMP: until we wire real auth, reuse the /api/me stub to know roles/allowedTenants
-async function readMe() {
-  const res = await fetch("http://localhost:3003/api/me", { cache: "no-store" });
-  return res.json() as Promise<{ roles: string[]; allowedTenants: string[] }>;
-}
+const BASE = (process.env.FUSIONAUTH_BASE_URL ?? "").replace(/\/+$/, "");
+const KEY  = process.env.FUSIONAUTH_API_KEY ?? "";
 
-async function fa(path: string) {
-  const base = process.env.FUSIONAUTH_BASE_URL!;
-  const key  = process.env.FUSIONAUTH_API_KEY!;
-  const res  = await fetch(`${base}${path}`, {
-    headers: { Authorization: key }, // FusionAuth expects API key in Authorization header
-    cache: "no-store",
-  });
-  const data = await res.json();
-  if (!res.ok) throw data;
-  return data;
+type Me = { roles: string[]; allowedTenants: string[] };
+
+async function readMe(): Promise<Me> {
+  // NOTE: temp — uses your stubbed /api/me.
+  // When we wire real login, replace this with cookie/JWT claims.
+  const r = await fetch("http://localhost:3003/api/me", { cache: "no-store" });
+  if (!r.ok) throw new Error("Failed to read /api/me");
+  return r.json();
 }
 
 export async function GET() {
   try {
     const me = await readMe();
 
-    // Fetch all tenants from FusionAuth
-    // FusionAuth exposes tenant management under /api/tenant
-    const data = await fa("/api/tenant");
+    // Call FusionAuth: GET /api/tenant (requires API key)
+    const r = await fetch(`${BASE}/api/tenant`, {
+      headers: { Authorization: KEY }, // raw key in Authorization header
+      cache: "no-store",
+    });
+    const data = await r.json();
+    if (!r.ok) throw data;
 
-    // Normalize: FA returns { tenants: [...] }
-    let tenants: Array<{ id: string; name: string }> = data.tenants ?? [];
+    // Normalize
+    let tenants: Array<{ id: string; name: string }> =
+      (data.tenants ?? []).map((t: any) => ({ id: t.id, name: t.name }));
 
+    // Scope: super-admin sees all; viewers see intersection with allowedTenants
     const isSuper = me.roles.includes("super-admin");
     if (!isSuper) {
       const allow = new Set(me.allowedTenants ?? []);
