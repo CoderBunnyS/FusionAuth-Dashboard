@@ -106,9 +106,40 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/login").then(r => r.json())
-      .then(j => j.ok ? setLogins(j.items) : setLoginsErr(JSON.stringify(j.error)))
-      .catch(e => setLoginsErr(String(e)));
+    // Fetch both: historical from FusionAuth API + webhook events
+    Promise.all([
+      fetch("/api/login").then(r => r.json()),
+      fetch("/api/webhooks/fusionauth?category=logins").then(r => r.json()),
+    ]).then(([historical, webhooks]) => {
+      const histItems = (historical.ok ? historical.items : []).map((l: any) => ({
+        ts: l.ts,
+        loginId: l.loginId,
+        userId: l.userId,
+        appId: l.appId,
+        ip: l.ip,
+        success: true, // Login records are only successful logins
+      }));
+      
+      const webhookItems = (webhooks.ok ? webhooks.items : []).map((e: any) => ({
+        ts: e.ts,
+        loginId: e.loginId,
+        userId: e.userId,
+        appId: e.appId,
+        ip: e.ip,
+        success: e.type === "user.login.success",
+        reason: e.data?.reason,
+      }));
+      
+      // Merge, dedupe by ts+userId, sort newest first
+      const merged = [...webhookItems, ...histItems]
+        .filter((item, idx, arr) => 
+          arr.findIndex(x => x.ts === item.ts && x.userId === item.userId) === idx
+        )
+        .sort((a, b) => b.ts - a.ts)
+        .slice(0, 50);
+      
+      setLogins(merged);
+    }).catch(e => setLoginsErr(String(e)));
   }, []);
 
   useEffect(() => {

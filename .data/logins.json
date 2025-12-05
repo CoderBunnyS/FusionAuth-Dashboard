@@ -1,0 +1,65 @@
+[
+  {
+    "ts": 1764892665298,
+    "type": "user.login.success",
+    "tenantId": "30663132-6464-6665-3032-326466613934",
+    "userId": "9d9fad09-cf8b-41e4-98ca-8972f9c6fa71",
+    "loginId": "admin@fusionauth.io",
+    "appId": "3c219e58-ed0e-4b18-ad48-f4f92793ae32",
+    "ip": "131.226.35.36",
+    "data": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "location": {
+        "city": "Denver",
+        "country": "US",
+        "displayString": "Denver, CO, US",
+        "latitude": 39.73915,
+        "longitude": -104.9847,
+        "region": "CO",
+        "zipcode": "80203"
+      }
+    }
+  },
+  {
+    "ts": 1764892446169,
+    "type": "user.login.success",
+    "tenantId": "30663132-6464-6665-3032-326466613934",
+    "userId": "1a027b1d-4ecf-47a3-b534-b8a6ee6317ea",
+    "loginId": "andy.pai@gmail.com",
+    "appId": "3c219e58-ed0e-4b18-ad48-f4f92793ae32",
+    "ip": "131.226.35.36",
+    "data": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "location": {
+        "city": "Denver",
+        "country": "US",
+        "displayString": "Denver, CO, US",
+        "latitude": 39.73915,
+        "longitude": -104.9847,
+        "region": "CO",
+        "zipcode": "80203"
+      }
+    }
+  },
+  {
+    "ts": 1764892422189,
+    "type": "user.login.success",
+    "tenantId": "30663132-6464-6665-3032-326466613934",
+    "userId": "9d9fad09-cf8b-41e4-98ca-8972f9c6fa71",
+    "loginId": "admin@fusionauth.io",
+    "appId": "3c219e58-ed0e-4b18-ad48-f4f92793ae32",
+    "ip": "131.226.35.36",
+    "data": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      "location": {
+        "city": "Denver",
+        "country": "US",
+        "displayString": "Denver, CO, US",
+        "latitude": 39.73915,
+        "longitude": -104.9847,
+        "region": "CO",
+        "zipcode": "80203"
+      }
+    }
+  }
+]
